@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,6 +47,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .sync-led{width:4px;height:4px;border-radius:50%;background:var(--text4);flex-shrink:0;transition:background 0.3s}
 .sync-led.ok{background:var(--win)}.sync-led.err{background:var(--loss)}.sync-led.go{background:var(--warn);animation:pulse 0.8s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.2}}
+.user-row{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--text3);padding:6px 9px;border-radius:var(--r2);background:var(--bg2);border:1px solid var(--line);font-family:var(--font-mono);overflow:hidden}
+.user-row-email{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .topbar{padding:16px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:var(--bg1);position:sticky;top:0;z-index:10}
 .pg-title{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--text);letter-spacing:0.01em}
 .pg-sub{font-size:10px;color:var(--text3);margin-top:1px;font-family:var(--font-mono)}
@@ -222,6 +223,32 @@ textarea.fi{resize:vertical;min-height:64px;line-height:1.6}
 .perf-row.hd > div{padding:2px 0}
 .perf-cell{font-size:11px;font-family:var(--font-mono);color:var(--text2)}
 .perf-cell.lbl{color:var(--text);font-weight:500;font-family:var(--font-display);font-size:12px}
+
+/* ─── LOGIN SCREEN ─── */
+.auth-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.auth-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(232,232,234,0.02) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(77,184,122,0.015) 0%,transparent 50%);pointer-events:none}
+.auth-card{background:var(--bg1);border:1px solid var(--line);border-radius:var(--r3);width:380px;max-width:100%;position:relative;overflow:hidden}
+.auth-hd{padding:28px 32px 20px;border-bottom:1px solid var(--line);text-align:center}
+.auth-mark{display:inline-flex;align-items:center;gap:9px;margin-bottom:14px}
+.auth-diamond{width:8px;height:8px;background:var(--text);transform:rotate(45deg)}
+.auth-name{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.auth-sub{font-size:9px;color:var(--text3);letter-spacing:0.16em;text-transform:uppercase;font-family:var(--font-mono)}
+.auth-body{padding:22px 32px 26px;display:flex;flex-direction:column;gap:14px}
+.auth-intro{font-size:11px;color:var(--text3);line-height:1.7;margin-bottom:4px;font-family:var(--font-body)}
+.auth-fg{display:flex;flex-direction:column;gap:5px}
+.auth-lbl{font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);font-family:var(--font-mono)}
+.auth-fi{background:var(--bg2);border:1px solid var(--line2);border-radius:var(--r2);padding:9px 12px;color:var(--text);font-family:var(--font-mono);font-size:12px;width:100%;transition:border-color 0.12s}
+.auth-fi:focus{outline:none;border-color:var(--accent-border);background:var(--bg3)}
+.auth-fi::placeholder{color:var(--text4)}
+.auth-btn{background:var(--text);color:var(--bg);border:none;border-radius:var(--r2);padding:10px 14px;font-family:var(--font-body);font-size:12px;font-weight:600;letter-spacing:0.03em;cursor:pointer;transition:all 0.12s;margin-top:4px}
+.auth-btn:hover{background:var(--accent2)}
+.auth-btn:active{transform:scale(0.98)}
+.auth-btn:disabled{opacity:0.5;cursor:not-allowed}
+.auth-err{background:var(--loss-bg);border:1px solid var(--loss-border);color:var(--loss);border-radius:var(--r2);padding:8px 11px;font-size:10px;font-family:var(--font-mono);line-height:1.5;display:none}
+.auth-err.show{display:block}
+.auth-ft{padding:12px 32px 20px;border-top:1px solid var(--line);text-align:center}
+.auth-ft-txt{font-size:9px;color:var(--text4);letter-spacing:0.1em;text-transform:uppercase;font-family:var(--font-mono)}
+
 @media(max-width:700px){
   .app{grid-template-columns:1fr}.sidebar{display:none}
   .stats{grid-template-columns:repeat(3,1fr)}
@@ -233,6 +260,36 @@ textarea.fi{resize:vertical;min-height:64px;line-height:1.6}
 </head>
 <body>
 
+<!-- ─── LOGIN SCREEN ───────────────────────────────────────────── -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-bg"></div>
+  <div class="auth-card">
+    <div class="auth-hd">
+      <div class="auth-mark">
+        <div class="auth-diamond"></div>
+        <div class="auth-name">KILANI CAPITAL</div>
+      </div>
+      <div class="auth-sub">Trade Journal · Secure Access</div>
+    </div>
+    <div class="auth-body">
+      <div class="auth-intro">Enter your credentials to access the journal. Unauthorized access is not permitted.</div>
+      <div class="auth-fg">
+        <label class="auth-lbl">Email</label>
+        <input type="email" class="auth-fi" id="authEmail" placeholder="you@email.com" autocomplete="email">
+      </div>
+      <div class="auth-fg">
+        <label class="auth-lbl">Password</label>
+        <input type="password" class="auth-fi" id="authPassword" placeholder="••••••••••••" autocomplete="current-password">
+      </div>
+      <div class="auth-err" id="authError"></div>
+      <button class="auth-btn" id="authBtn" onclick="doLogin()">Sign In</button>
+    </div>
+    <div class="auth-ft">
+      <div class="auth-ft-txt">Midnight Steel · v2</div>
+    </div>
+  </div>
+</div>
+
 <div class="lo" id="lo" style="display:none">
   <div style="display:flex;align-items:center;gap:10px">
     <div style="width:6px;height:6px;background:var(--text);transform:rotate(45deg)"></div>
@@ -242,7 +299,7 @@ textarea.fi{resize:vertical;min-height:64px;line-height:1.6}
   <div class="lo-bar"><div class="lo-fill"></div></div>
 </div>
 
-<div class="app" id="app" style="display:grid">
+<div class="app" id="app" style="display:none">
 
 <aside class="sidebar">
   <div class="sb-logo">
@@ -274,7 +331,9 @@ textarea.fi{resize:vertical;min-height:64px;line-height:1.6}
   </nav>
   <div class="sb-foot">
     <div class="sync-row"><div class="sync-led ok" id="sd"></div><span id="st" style="color:var(--text3)">Synced · 0 trades</span></div>
+    <div class="user-row"><span style="color:var(--text3);font-size:9px">▸</span><span class="user-row-email" id="userEmail">—</span></div>
     <button class="btn btn-g" style="width:100%;justify-content:center;font-size:10px;letter-spacing:0.04em" onclick="exportCSV()">Export CSV</button>
+    <button class="btn btn-g" style="width:100%;justify-content:center;font-size:10px;letter-spacing:0.04em;color:var(--loss);border-color:var(--loss-border)" onclick="doLogout()">Sign Out</button>
   </div>
 </aside>
 
@@ -656,21 +715,125 @@ textarea.fi{resize:vertical;min-height:64px;line-height:1.6}
 <div class="fs" id="fsc" onclick="this.classList.remove('open')"><img id="fsi" src="" alt=""></div>
 <div class="toast" id="toast"></div>
 
+<!-- ─── SUPABASE AUTH LIBRARY ─── -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
 <script>
+// ─── SUPABASE CONFIG ─────────────────────────────────────────
 const SB='https://wmyfsiqhbvfjeikrznhq.supabase.co';
 const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndteWZzaXFoYnZmamVpa3J6bmhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1Njg0ODAsImV4cCI6MjA5MTE0NDQ4MH0.xkWafMrqvLOekSWkgVQQ3iwJESNjEs54nn8Q-1WJCMU';
-const H={'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK};
+
+// Create Supabase client for auth
+const sb = supabase.createClient(SB, SK, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
+});
+
+// H = headers used for all REST calls. Will be updated after login to use the user's access token.
+let H = { 'Content-Type': 'application/json', 'apikey': SK, 'Authorization': 'Bearer ' + SK };
+
 let T=[],eid=null,css=[],C={};
 let ACCS=[];
 let PLANS={}; // date -> plan object (localStorage only for now)
 let editAccId=null,payoutAccId=null;
+let CURRENT_USER = null;
 
 // Level display map
 const LVL_LABELS={NWOG:'NWOG',PDH:'PDH',PDL:'PDL','930H':'9:30 H','930L':'9:30 L',LDN_BSL:'LDN BSL',LDN_SSL:'LDN SSL',ASIA_BSL:'ASIA BSL',ASIA_SSL:'ASIA SSL',ATH:'ATH',FVG:'FVG'};
 const SETUP_LABELS={continuation:'Continuation',reversal:'Reversal'};
 const EMO_LABELS={calm:'Calm',neutral:'Neutral',fomo:'FOMO',revenge:'Revenge',forcing:'Forcing',bored:'Bored'};
 const EMO_CLASSES={calm:'bemo-calm',neutral:'bemo-calm',fomo:'bemo-fomo',revenge:'bemo-revenge',forcing:'bemo-forcing',bored:'bemo-bored'};
+
+// ─── AUTH ────────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const btn = document.getElementById('authBtn');
+  const errEl = document.getElementById('authError');
+  errEl.classList.remove('show');
+
+  if (!email || !password) {
+    errEl.textContent = 'Email and password required.';
+    errEl.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Signing in...';
+
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    CURRENT_USER = data.user;
+    // Update headers to use the authenticated user's access token
+    H = {
+      'Content-Type': 'application/json',
+      'apikey': SK,
+      'Authorization': 'Bearer ' + data.session.access_token
+    };
+    await bootApp();
+  } catch (err) {
+    errEl.textContent = err.message || 'Login failed. Check your email and password.';
+    errEl.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Sign In';
+  }
+}
+
+async function doLogout() {
+  if (!confirm('Sign out?')) return;
+  await sb.auth.signOut();
+  location.reload();
+}
+
+async function checkExistingSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session && session.user) {
+    CURRENT_USER = session.user;
+    H = {
+      'Content-Type': 'application/json',
+      'apikey': SK,
+      'Authorization': 'Bearer ' + session.access_token
+    };
+    await bootApp();
+  } else {
+    // No session — show login screen (already shown by default)
+    document.getElementById('authEmail').focus();
+  }
+}
+
+// Allow Enter key to submit login form
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('authEmail').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('authPassword').focus(); });
+  document.getElementById('authPassword').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  checkExistingSession();
+});
+
+// ─── App Boot (after authenticated) ──────────────────────────
+async function bootApp() {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('lo').style.display = 'flex';
+  document.getElementById('userEmail').textContent = CURRENT_USER?.email || '—';
+
+  document.getElementById('ds').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('fd').value=new Date().toISOString().split('T')[0];
+  document.getElementById('adate').value=new Date().toISOString().split('T')[0];
+  document.getElementById('pdate').value=new Date().toISOString().split('T')[0];
+  document.getElementById('planDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'});
+  ['fen','fss','fts','fex','fdi'].forEach(id=>document.getElementById(id)?.addEventListener('input',calcR));
+  setupDrop();
+  loadPlans();
+  await loadAccs();
+  await loadDB();
+  document.getElementById('lo').style.display='none';
+  document.getElementById('app').style.display='grid';
+  renderAll();bldStreak();renderAccs();renderPlanBanner();
+  ['to','dov','aov','pov','povp'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.addEventListener('click',function(e){if(e.target===this){if(id==='to')cm();else if(id==='dov')cd();else if(id==='aov')closeAccModal();else this.classList.remove('open');}});
+  });
+}
 
 // ─── DB: Accounts ───────────────────────────────────────────
 async function loadAccs(){
@@ -703,7 +866,6 @@ async function loadDB(){
       violations:x.violations||[],note:x.note,tf:x.tf,screenshots:x.screenshots||[],
       savedAt:x.saved_at,accountId:x.account_id||'',
       sweep:x.sweep||'',exitBehavior:x.exit_behavior||'',duration:x.duration||'',
-      // new v2 fields - read from columns if they exist, otherwise empty
       setup:x.setup||'',emotion:x.emotion||'',primaryTarget:x.primary_target||'',secondaryTarget:x.secondary_target||'',
       smt:x.smt||'',zone:x.zone||'',manipulation:x.manipulation||'',mfe:x.mfe||'',news:x.news||''
     }));
@@ -729,27 +891,6 @@ function tr(t){return{
 // ─── Plans (localStorage only) ──────────────────────────────
 function loadPlans(){const s=localStorage.getItem('kc_plans');if(s)PLANS=JSON.parse(s);}
 function savePlansLocal(){localStorage.setItem('kc_plans',JSON.stringify(PLANS));}
-
-// ─── Init ────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded',async()=>{
-  document.getElementById('ds').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  document.getElementById('fd').value=new Date().toISOString().split('T')[0];
-  document.getElementById('adate').value=new Date().toISOString().split('T')[0];
-  document.getElementById('pdate').value=new Date().toISOString().split('T')[0];
-  document.getElementById('planDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'});
-  ['fen','fss','fts','fex','fdi'].forEach(id=>document.getElementById(id)?.addEventListener('input',calcR));
-  setupDrop();
-  loadPlans();
-  await loadAccs();
-  await loadDB();
-  document.getElementById('lo').style.display='none';
-  document.getElementById('app').style.display='grid';
-  renderAll();bldStreak();renderAccs();renderPlanBanner();
-  ['to','dov','aov','pov','povp'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.addEventListener('click',function(e){if(e.target===this){if(id==='to')cm();else if(id==='dov')cd();else if(id==='aov')closeAccModal();else this.classList.remove('open');}});
-  });
-});
 
 // ─── Navigation ──────────────────────────────────────────────
 const PAGE_MAP={d:'pd',l:'pl',sp:'psp',a:'pa',m:'pm',ac:'pac',r:'pr',s:'ps'};
@@ -1264,7 +1405,6 @@ function rf(){
 }
 function calcR(){
   const e=+document.getElementById('fen').value,ss=+document.getElementById('fss').value,ts=+document.getElementById('fts').value,x=+document.getElementById('fex').value,dir=document.getElementById('fdi').value;
-  // Auto-compute stop and target prices from sizes
   if(e&&ss&&dir){
     const sp=dir==='long'?e-ss:e+ss;
     document.getElementById('fst').value=sp.toFixed(2);
@@ -1273,7 +1413,6 @@ function calcR(){
     const tp=dir==='long'?e+ts:e-ts;
     document.getElementById('ftp').value=tp.toFixed(2);
   }else{document.getElementById('ftp').value='';}
-  // Planned R/R
   if(ss>0&&ts>0){
     const pr=ts/ss;
     const pe=document.getElementById('fpr');
@@ -1285,7 +1424,6 @@ function calcR(){
     document.getElementById('fpr').className='fi mono';
     document.getElementById('rc').innerHTML='';
   }
-  // Actual R from exit
   if(e&&x&&ss>0&&dir){
     const pnl=dir==='long'?x-e:e-x,ar=pnl/ss;
     const ae=document.getElementById('far');
@@ -1307,7 +1445,6 @@ async function sv(){
   if(!stopSize||stopSize<=0){toast('Stop size (points) is required','err');return;}
   if(!targetSize||targetSize<=0){toast('Target size (points) is required','err');return;}
   const e=+entry,x=+exit;
-  // Compute stop and target prices from sizes + direction (stored as prices in DB for compatibility)
   const stop=dir==='long'?(e-stopSize).toFixed(2):(e+stopSize).toFixed(2);
   const target=dir==='long'?(e+targetSize).toFixed(2):(e-targetSize).toFixed(2);
   const pnl=x?(dir==='long'?x-e:e-x):null;
@@ -1392,7 +1529,6 @@ function edit(id){
   document.getElementById('mtt').textContent='Edit Trade';document.getElementById('sb').textContent='Update Trade';
   document.getElementById('fd').value=t.date||'';document.getElementById('fdi').value=t.direction||'';
   document.getElementById('fen').value=t.entry||'';document.getElementById('fex').value=t.exit||'';
-  // Reverse-compute sizes from stored prices for display
   const ev=+t.entry,sv=+t.stop,tv=+t.target;
   document.getElementById('fss').value=(ev&&sv)?Math.abs(ev-sv).toFixed(2):'';
   document.getElementById('fts').value=(ev&&tv)?Math.abs(ev-tv).toFixed(2):'';
