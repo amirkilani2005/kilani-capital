@@ -233,7 +233,7 @@ textarea.fi{resize:vertical;min-height:64px;line-height:1.6}
 .auth-diamond{width:8px;height:8px;background:var(--text);transform:rotate(45deg)}
 .auth-name{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--text);letter-spacing:0.02em}
 .auth-sub{font-size:9px;color:var(--text3);letter-spacing:0.16em;text-transform:uppercase;font-family:var(--font-mono)}
-.auth-body{padding:22px 32px 26px;display:flex;flex-direction:column;gap:14px}
+.auth-body{padding:22px 32px 30px;display:flex;flex-direction:column;gap:14px}
 .auth-intro{font-size:11px;color:var(--text3);line-height:1.7;margin-bottom:4px;font-family:var(--font-body)}
 .auth-fg{display:flex;flex-direction:column;gap:5px}
 .auth-lbl{font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);font-family:var(--font-mono)}
@@ -269,10 +269,9 @@ textarea.fi{resize:vertical;min-height:64px;line-height:1.6}
         <div class="auth-diamond"></div>
         <div class="auth-name">KILANI CAPITAL</div>
       </div>
-      <div class="auth-sub">Trade Journal · Secure Access</div>
+      <div class="auth-sub">Secure Access</div>
     </div>
     <div class="auth-body">
-      <div class="auth-intro">Enter your credentials to access the journal. Unauthorized access is not permitted.</div>
       <div class="auth-fg">
         <label class="auth-lbl">Email</label>
         <input type="email" class="auth-fi" id="authEmail" placeholder="you@email.com" autocomplete="email">
@@ -283,9 +282,6 @@ textarea.fi{resize:vertical;min-height:64px;line-height:1.6}
       </div>
       <div class="auth-err" id="authError"></div>
       <button class="auth-btn" id="authBtn" onclick="doLogin()">Sign In</button>
-    </div>
-    <div class="auth-ft">
-      <div class="auth-ft-txt">Midnight Steel · v2</div>
     </div>
   </div>
 </div>
@@ -912,15 +908,7 @@ function renderAll(){stats();recent();tblR();tbar();eqC();aMet();updateAccDropdo
 
 // ─── Plan Banner ─────────────────────────────────────────────
 function renderPlanBanner(){
-  const td=new Date().toISOString().split('T')[0];
-  const has=PLANS[td];
-  const el=document.getElementById('planBanner');
-  if(has){
-    const setups=[];if(has.s1)setups.push('Continuation');if(has.s2)setups.push('Reversal');
-    el.innerHTML=`<div class="plan-banner ok"><div class="plan-banner-t">✓ Plan logged · Bias: ${has.bias||'—'} · Hunting: ${setups.join(' + ')||'—'} · Max: ${has.max||2} · State: ${has.emo||'—'}/10</div><button class="btn btn-g btn-sm" onclick="openPlanModal()">View / Edit</button></div>`;
-  }else{
-    el.innerHTML=`<div class="plan-banner"><div class="plan-banner-t">⚠ No daily plan logged for today. Write it before opening a chart.</div><button class="btn btn-p btn-sm" onclick="openPlanModal()">Write Plan</button></div>`;
-  }
+  document.getElementById('planBanner').innerHTML='';
 }
 
 function openPlanModal(){
